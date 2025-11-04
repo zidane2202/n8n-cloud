@@ -6,7 +6,7 @@ services:
     dockerfilePath: ./Dockerfile
     envVars:
       - key: WEB_CONCURRENCY
-        value: 1
+        value: "1"
       - key: NODE_ENV
         value: production
       - key: N8N_BASIC_AUTH_ACTIVE
@@ -15,3 +15,15 @@ services:
         value: "admin"
       - key: N8N_BASIC_AUTH_PASSWORD
         value: "admin123"
+      - key: GENERIC_TIMEZONE
+        value: Africa/Douala
+      - key: N8N_PORT
+        value: "5678"
+      - key: N8N_PROTOCOL
+        value: http
+      - key: N8N_HOST
+        value: 0.0.0.0
+      - key: N8N_EDITOR_BASE_URL
+        value: https://ton-url-de-render
+      - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
+        value: "true"
