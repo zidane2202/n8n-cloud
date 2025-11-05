@@ -4,46 +4,23 @@ services:
     env: docker
     plan: free
     dockerfilePath: ./Dockerfile
-    envVars:
-      - key: WEB_CONCURRENCY
-        value: 1
-      - key: NODE_ENV
-        value: production
-      - key: N8N_BASIC_AUTH_ACTIVE
-        value: "true"
-      - key: N8N_BASIC_AUTH_USER
-        value: "admin"
-      - key: N8N_BASIC_AUTH_PASSWORD
-        value: "admin123"
-services:
-  - type: web
-    name: n8n
-    env: docker
-    plan: free
-    dockerfilePath: ./Dockerfile
     autoDeploy: true
-
+    startCommand: n8n
     envVars:
       - key: WEB_CONCURRENCY
-        value: 1
+        value: "1"
       - key: NODE_ENV
         value: production
-
-      # Authentication
       - key: N8N_BASIC_AUTH_ACTIVE
         value: "true"
       - key: N8N_BASIC_AUTH_USER
         value: "admin"
       - key: N8N_BASIC_AUTH_PASSWORD
         value: "admin123"
-
-      # Timezone
       - key: GENERIC_TIMEZONE
         value: Africa/Douala
-
-      # Connection to your Render Postgres database
       - key: DB_TYPE
-        value: postgres
+        value: postgresdb
       - key: DB_POSTGRESDB_HOST
         fromDatabase:
           name: n8n-db
@@ -64,16 +41,14 @@ services:
         fromDatabase:
           name: n8n-db
           property: password
-
-      # Encryption key for workflow secrets
       - key: N8N_ENCRYPTION_KEY
         value: your_very_secret_random_key
-
-      # These two will be updated *after first deploy*
-      - key: N8N_HOST
-        value: ""         # <-- leave empty for first deploy
-      - key: WEBHOOK_URL
-        value: ""         # <-- leave empty for first deploy
+      - key: N8N_RUNNERS_ENABLED
+        value: "true"
+      - key: N8N_BLOCK_ENV_ACCESS_IN_NODE
+        value: "false"
+      - key: N8N_GIT_NODE_DISABLE_BARE_REPOS
+        value: "true"
 
 databases:
   - name: n8n-db
