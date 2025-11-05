@@ -6,7 +6,7 @@ services:
     dockerfilePath: ./Dockerfile
     envVars:
       - key: WEB_CONCURRENCY
-        value: "1"
+        value: 1
       - key: NODE_ENV
         value: production
       - key: N8N_BASIC_AUTH_ACTIVE
@@ -15,15 +15,65 @@ services:
         value: "admin"
       - key: N8N_BASIC_AUTH_PASSWORD
         value: "admin123"
+services:
+  - type: web
+    name: n8n
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+
+    envVars:
+      - key: WEB_CONCURRENCY
+        value: 1
+      - key: NODE_ENV
+        value: production
+
+      # Authentication
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: "true"
+      - key: N8N_BASIC_AUTH_USER
+        value: "admin"
+      - key: N8N_BASIC_AUTH_PASSWORD
+        value: "admin123"
+
+      # Timezone
       - key: GENERIC_TIMEZONE
         value: Africa/Douala
-      - key: N8N_PORT
-        value: "5678"
-      - key: N8N_PROTOCOL
-        value: http
+
+      # Connection to your Render Postgres database
+      - key: DB_TYPE
+        value: postgres
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: n8n-db
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: n8n-db
+          property: port
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: n8n-db
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: n8n-db
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: n8n-db
+          property: password
+
+      # Encryption key for workflow secrets
+      - key: N8N_ENCRYPTION_KEY
+        value: your_very_secret_random_key
+
+      # These two will be updated *after first deploy*
       - key: N8N_HOST
-        value: 0.0.0.0
-      - key: N8N_EDITOR_BASE_URL
-        value: https://ton-url-de-render
-      - key: N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS
-        value: "true"
+        value: ""         # <-- leave empty for first deploy
+      - key: WEBHOOK_URL
+        value: ""         # <-- leave empty for first deploy
+
+databases:
+  - name: n8n-db
